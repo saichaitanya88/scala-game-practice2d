@@ -74,11 +74,13 @@ class BasicBoard extends JPanel {
       }
       else{
         grid.setSelectedGridLoc(p)
-        debugPrintCurrentState()
       }
       repaint()
     })
+    
     gml.addMouseClickEvent("selectShip", (e: MouseEvent) => {
+      val movablePositions =  (if (selectedEntity.isDefined) Utils.getMovablePositions(selectedEntity.get.asInstanceOf[Ship], this)
+                              else List[Point]())
       val p = e.getPoint
       val x = (p.x - (p.x % grid.gridSize))/grid.gridSize
       val y = (p.y - (p.y % grid.gridSize))/grid.gridSize
@@ -87,12 +89,22 @@ class BasicBoard extends JPanel {
         setCursor(cursors.find(c => c._1 == "CROSSHAIR_CURSOR").get._2)
         selectedEntity.get.entityType match {
           case EntityType.ENEMY_SHIP => {
-            stateMachine.selectionState = SelectionStatesMap.next(stateMachine.selectionState, SelectionStateActions.SELECTED_ENEMY) 
-            //(if (stateMachine.selectionState == SelectionStates.SELECTED_PLAYER) SelectionStates.SELECTED_ATTACK_LOCATION else SelectionStates.SELECTED_ENEMY)
+            if (movablePositions.size == 0)
+              stateMachine.selectionState = SelectionStatesMap.next(stateMachine.selectionState, SelectionStateActions.SELECTED_ENEMY)
           }
           case EntityType.PLAYER_SHIP => { 
-            stateMachine.selectionState = SelectionStates.NONE
+            stateMachine.selectionState = SelectionStatesMap.next(stateMachine.selectionState, SelectionStateActions.SELECTED_PLAYER)
           }
+        }
+        if (stateMachine.selectionState == SelectionStates.NONE){
+          selectedEntity  = None: Option[Entity]
+          grid.highlightedGridLoc = null
+        }
+      }
+      else if (!selectedEntity.isDefined){
+        if (movablePositions.find(mp => mp.x == p.x && mp.y == p.y).isDefined) {
+          println("MOVE PLAYER TO POSITION")
+          SelectionStates.SELECTED_MOVE_LOCATION
         }
       }
       else {
@@ -100,16 +112,25 @@ class BasicBoard extends JPanel {
         stateMachine.gameState = GameStates.USER_TURN
         stateMachine.selectionState = SelectionStates.NONE
       }
+      
+      // ATTACK/MOVE HERE
+      if (stateMachine.selectionState == SelectionStates.SELECTED_ATTACK_LOCATION){
+        println("SELECTED_ATTACK_LOCATION")
+        stateMachine.selectionState = SelectionStates.NONE
+        selectedEntity  = None: Option[Entity]
+        grid.highlightedGridLoc = null
+      }
+      else if (stateMachine.selectionState == SelectionStates.SELECTED_MOVE_LOCATION){
+        println("SELECTED_MOVE_LOCATION")
+        stateMachine.selectionState = SelectionStates.NONE
+        selectedEntity  = None: Option[Entity]
+        grid.highlightedGridLoc = null
+      }
+      debugPrintCurrentState()
       repaint() 
     })
   } 
   def debugPrintCurrentState(){
-//    stateMachine.gameState match {
-//          case GameStates.USER_TURN => println("still user turn")
-//          case _ => println(s"state is ${stateMachine}")
-//        }
-//    stateMachine.selectionState 
-//    case "SELECTED_PLAYER" => println(s"attack thing at ${grid.highlightedGridLoc} if occupied, else move")
     println(s"gameState: ${stateMachine.gameState} & selectionState: ${stateMachine.selectionState}")
   }
   override def paintComponent(g: Graphics){

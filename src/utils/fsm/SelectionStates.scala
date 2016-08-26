@@ -13,14 +13,17 @@ object SelectionStatesMap {
       case SelectionStates.NONE => {
         action match {
           case SelectionStateActions.SELECTED_EMPTY_SPOT => SelectionStates.NONE
-          case SelectionStateActions.SELECTED_ENEMY => SelectionStates.NONE
+          case SelectionStateActions.SELECTED_ENEMY => SelectionStates.SELECTED_ENEMY
           case SelectionStateActions.SELECTED_PLAYER => SelectionStates.SELECTED_PLAYER
+          case SelectionStateActions.SELECTED_OTHER_PLAYER => SelectionStates.SELECTED_PLAYER
+          case SelectionStateActions.SELECTED_SAME_PLAYER => SelectionStates.SELECTED_PLAYER
         }
       }
       case SelectionStates.SELECTED_PLAYER => {
         action match {
           case SelectionStateActions.SELECTED_EMPTY_SPOT => SelectionStates.SELECTED_MOVE_LOCATION
           case SelectionStateActions.SELECTED_ENEMY => SelectionStates.SELECTED_ATTACK_LOCATION
+          case SelectionStateActions.SELECTED_PLAYER => SelectionStates.NONE
           case SelectionStateActions.SELECTED_SAME_PLAYER => SelectionStates.NONE
           case SelectionStateActions.SELECTED_OTHER_PLAYER => SelectionStates.SELECTED_PLAYER
         }
@@ -30,8 +33,12 @@ object SelectionStatesMap {
           case SelectionStateActions.SELECTED_EMPTY_SPOT => SelectionStates.NONE
           case SelectionStateActions.SELECTED_ENEMY => SelectionStates.NONE
           case SelectionStateActions.SELECTED_PLAYER => SelectionStates.SELECTED_PLAYER
+          case SelectionStateActions.SELECTED_SAME_PLAYER => SelectionStates.SELECTED_PLAYER
+          case SelectionStateActions.SELECTED_OTHER_PLAYER => SelectionStates.SELECTED_PLAYER
         }
       }
+      case SelectionStates.SELECTED_MOVE_LOCATION => SelectionStates.NONE
+      case SelectionStates.SELECTED_ATTACK_LOCATION => SelectionStates.NONE
     }
   }
 }
