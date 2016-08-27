@@ -227,21 +227,6 @@ class BasicBoard extends JPanel {
         g.asInstanceOf[Graphics2D].fill(new Rectangle2D.Double(p.x * grid.gridSize, p.y * grid.gridSize, grid.gridSize, grid.gridSize))
       })
     }
-
-    /* Draw random stuff*/
-    g.setColor(Color.orange)
-    g.drawString("Color test string", grid.width, 100)
-    g.setColor(Color.cyan)
-    g.drawString("Color test string", grid.width, 120)
-    g.setColor(Color.yellow)
-    g.drawString("Color test string", grid.width, 140)
-    g.setColor(Color.lightGray)
-    g.drawString("Color test string", grid.width, 160)
-    g.setColor(Color.decode("#AA6600"))
-    g.drawString("Color test string", grid.width, 180)
-
-    g.drawString("with crosshair, click orange to move, click enemy to attack", grid.width, 200)
-    g.drawString("with crosshair, show percentage of attack plus possible damage to each enemy", grid.width, 220)
     Toolkit.getDefaultToolkit().sync()
   }
 }
