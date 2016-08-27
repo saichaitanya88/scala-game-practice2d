@@ -1,3 +1,4 @@
+. fsm and selection states for application
 . implement player movements first, then integrate enemy ai for the game
 . Swap out E,P characters with images. 
 . Animations for shoot, move etc. 

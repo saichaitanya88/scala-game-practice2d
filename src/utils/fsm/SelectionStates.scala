@@ -5,7 +5,7 @@ object SelectionStates extends Enumeration {
   val NONE, SELECTED_PLAYER, SELECTED_ENEMY, SELECTED_MOVE_LOCATION, SELECTED_ATTACK_LOCATION = Value
 }
 object SelectionStateActions extends Enumeration {
-  val SELECTED_ENEMY, SELECTED_EMPTY_SPOT, SELECTED_PLAYER, SELECTED_OTHER_PLAYER, SELECTED_SAME_PLAYER = Value
+  val SELECTED_ENEMY, SELECTED_EMPTY_SPOT, SELECTED_PLAYER, SELECTED_OTHER_PLAYER, SELECTED_SAME_PLAYER, SELECTED_ATTACK_ENEMY = Value
 }
 object SelectionStatesMap {
   def next(currentState: SelectionStates.Value, action: SelectionStateActions.Value): SelectionStates.Value = {
@@ -17,6 +17,7 @@ object SelectionStatesMap {
           case SelectionStateActions.SELECTED_PLAYER => SelectionStates.SELECTED_PLAYER
           case SelectionStateActions.SELECTED_OTHER_PLAYER => SelectionStates.SELECTED_PLAYER
           case SelectionStateActions.SELECTED_SAME_PLAYER => SelectionStates.SELECTED_PLAYER
+          case SelectionStateActions.SELECTED_ATTACK_ENEMY => SelectionStates.SELECTED_ENEMY
         }
       }
       case SelectionStates.SELECTED_PLAYER => {
@@ -26,6 +27,7 @@ object SelectionStatesMap {
           case SelectionStateActions.SELECTED_PLAYER => SelectionStates.NONE
           case SelectionStateActions.SELECTED_SAME_PLAYER => SelectionStates.NONE
           case SelectionStateActions.SELECTED_OTHER_PLAYER => SelectionStates.SELECTED_PLAYER
+          case SelectionStateActions.SELECTED_ATTACK_ENEMY => SelectionStates.SELECTED_ENEMY
         }
       }
       case SelectionStates.SELECTED_ENEMY => {
@@ -35,6 +37,7 @@ object SelectionStatesMap {
           case SelectionStateActions.SELECTED_PLAYER => SelectionStates.SELECTED_PLAYER
           case SelectionStateActions.SELECTED_SAME_PLAYER => SelectionStates.SELECTED_PLAYER
           case SelectionStateActions.SELECTED_OTHER_PLAYER => SelectionStates.SELECTED_PLAYER
+          case SelectionStateActions.SELECTED_ATTACK_ENEMY => SelectionStates.SELECTED_ENEMY
         }
       }
       case SelectionStates.SELECTED_MOVE_LOCATION => SelectionStates.NONE
